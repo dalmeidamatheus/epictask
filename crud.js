@@ -1,6 +1,16 @@
 document.querySelector("#salvar").addEventListener("click", cadastrar)
 
+let listatarefas = []
+
+window.addEventListener("load", () => {
+  listatarefas = JSON.parse(localStorage.getItem("listatarefas"))
+  listatarefas.forEach((tarefa) => {
+    document.querySelector("#tarefas").innerHTML += gerar_card(tarefa)
+  })
+})
+
 function cadastrar(){
+    const modal = bootstrap.Modal.getInstance(document.querySelector("#exampleModal"))
     let titulo = document.querySelector("#titulo").value
     let descricao = document.querySelector("#descricao").value
     let pontos = document.querySelector("#pontos").value
@@ -13,7 +23,21 @@ function cadastrar(){
         categoria
     }
 
+    if(tarefa.titulo.length == 0){
+      document.querySelector("#titulo").classList.add("is-invalid")
+      return
+    }
+
+    listatarefas.push(tarefa)
+
     document.querySelector('#tarefas').innerHTML += gerar_card(tarefa)
+
+    document.querySelector("#titulo").value = ""
+    document.querySelector("#descricao").value = ""
+
+    localStorage.setItem("listatarefas", JSON.stringify(listatarefas))
+
+    modal.hide()
 }
 
 function apagar(botao){
